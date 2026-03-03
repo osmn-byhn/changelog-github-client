@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Angular Integration Demo - Github Changelog</title>
+
+    <!-- Load Angular dependencies -->
+    <script src="https://unpkg.com/core-js/client/shim.min.js"></script>
+    <script src="https://unpkg.com/zone.js"></script>
+    <script src="https://unpkg.com/rxjs/bundles/rxjs.umd.min.js"></script>
+    <script src="https://unpkg.com/@angular/core/bundles/core.umd.js"></script>
+    <script src="https://unpkg.com/@angular/common/bundles/common.umd.js"></script>
+    <script src="https://unpkg.com/@angular/compiler/bundles/compiler.umd.js"></script>
+    <script src="https://unpkg.com/@angular/platform-browser/bundles/platform-browser.umd.js"></script>
+    <script src="https://unpkg.com/@angular/platform-browser-dynamic/bundles/platform-browser-dynamic.umd.js"></script>
+
+    <style>
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            margin: 0;
+            padding: 2rem;
+            background: #fafafa;
+            color: #333;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <a href="/index.html" style="text-decoration: none; color: #dc2626;">← Back to Examples</a>
+        <h1>Angular Integration</h1>
+    </div>
+
+    <p>Angular wrapper component (<code>&lt;app-changelog&gt;</code>) rendering the vanilla typescript widget under the
+        hood.</p>
+
+    <div style="margin-top: 2rem;">
+        <my-app>Loading Angular Engine...</my-app>
+    </div>
+
+    <script type="module">
+        import { GithubChangelog } from '../dist/index.js';
+        window.GithubChangelog = GithubChangelog;
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const { Component, ViewChild, ElementRef, Input, enableProdMode } = window.ng.core;
+            const { BrowserModule } = window.ng.platformBrowser;
+            const { platformBrowserDynamic } = window.ng.platformBrowserDynamic;
+            const { NgModule } = window.ng.core;
+
+            // Ensure widget logic is loaded
+            setTimeout(() => {
+
+                class AngularChangelogComponent {
+                    constructor() {
+                        this.owner = 'angular';
+                        this.repo = 'angular';
+                        this.template = 'compact';
+                        this.theme = 'auto';
+                        this.maxReleases = 5;
+                    }
+
+                    ngAfterViewInit() {
+                        if (!this.container.nativeElement.id) {
+                            this.container.nativeElement.id = 'ng-changelog-widget';
+                        }
+
+                        const widget = new window.GithubChangelog({
+                            owner: this.owner,
+                            repo: this.repo,
+                            theme: this.theme,
+                            template: this.template,
+                            maxReleases: this.maxReleases,
+                            containerId: this.container.nativeElement.id
+                        });
+
+                        widget.init();
+                    }
+                }
+                AngularChangelogComponent.annotations = [
+                    new Component({
+                        selector: 'app-changelog',
+                        template: '<div #changelogContainer></div>',
+                        inputs: ['owner', 'repo', 'template', 'theme', 'maxReleases'],
+                        queries: {
+                            container: new ViewChild('changelogContainer', { static: true })
+                        }
+                    })
+                ];
+
+                class AppComponent {
+                    constructor() { }
+                }
+                AppComponent.annotations = [
+                    new Component({
+                        selector: 'my-app',
+                        template: '<app-changelog owner="angular" repo="angular" template="compact" theme="light" maxReleases="6"></app-changelog>'
+                    })
+                ];
+
+                class AppModule { }
+                AppModule.annotations = [
+                    new NgModule({
+                        imports: [BrowserModule],
+                        declarations: [AppComponent, AngularChangelogComponent],
+                        bootstrap: [AppComponent]
+                    })
+                ];
+
+                platformBrowserDynamic().bootstrapModule(AppModule)
+                    .catch(err => console.error(err));
+
+            }, 500);
+        });
+    </script>
+</body>
+
+</html>

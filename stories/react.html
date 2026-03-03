@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>React Integration Demo - Github Changelog</title>
+
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+
+    <style>
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            margin: 0;
+            padding: 2rem;
+            background: #f9fafb;
+            color: #111827;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <a href="/index.html" style="text-decoration: none; color: #3b82f6;">← Back to Examples</a>
+        <h1>React Integration</h1>
+    </div>
+
+    <div id="root"></div>
+
+    <script type="module">
+        import { GithubChangelog } from '../dist/index.js';
+        window.GithubChangelog = GithubChangelog;
+    </script>
+
+    <script type="text/babel">
+        const { useEffect, useRef } = React;
+
+        function ReactChangelogLoader({ owner, repo, template, theme, maxReleases }) {
+            const containerRef = useRef(null);
+
+            useEffect(() => {
+                if (!containerRef.current) return;
+                if (!containerRef.current.id) {
+                    containerRef.current.id = 'react-changelog-widget';
+                }
+
+                const widget = new window.GithubChangelog({
+                    owner: owner || 'facebook',
+                    repo: repo || 'react',
+                    template: template || 'modern-card',
+                    theme: theme || 'auto',
+                    maxReleases: maxReleases || 5,
+                    containerId: containerRef.current.id
+                });
+
+                widget.init();
+            }, [owner, repo, template, theme, maxReleases]);
+
+            return <div ref={containerRef}></div>;
+        }
+
+        function App() {
+            return (
+                <div>
+                    <p>This is a native React Component (`ReactChangelogLoader`) managing the vanilla JS widget.</p>
+                    <div style={{ marginTop: '2rem' }}>
+                        <ReactChangelogLoader owner="facebook" repo="react" template="modern-card" theme="light" maxReleases={6} />
+                    </div>
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+
+</html>

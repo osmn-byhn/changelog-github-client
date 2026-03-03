@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Github Changelog Demo</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+            background-color: #f9fafb;
+            color: #111827;
+            margin: 0;
+            padding: 0;
+        }
+
+        .demo-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #2563eb, #10b981);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .menu {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 4rem;
+        }
+
+        .menu-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: transform 0.2s, box-shadow 0.2s;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .menu-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        .menu-card.react {
+            border-top: 4px solid #61dafb;
+        }
+
+        .menu-card.vue {
+            border-top: 4px solid #4fc08d;
+        }
+
+        .menu-card.angular {
+            border-top: 4px solid #dd0031;
+        }
+
+        .menu-card h2 {
+            margin-top: 0;
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="demo-container">
+        <div class="header">
+            <h1>Github Changelog Library</h1>
+            <p>Framework-agnostic, zero-dependency release notes renderer.</p>
+        </div>
+
+        <div class="menu">
+            <a href="/react.html" class="menu-card react">
+                <h2>⚛️ React Integration</h2>
+                <p>See how to wrap the Vanilla JS widget in a native React Functional Component.</p>
+            </a>
+
+            <a href="/vue.html" class="menu-card vue">
+                <h2>💚 Vue 3 Integration</h2>
+                <p>Demonstrates using Vue Template Refs and the Options/Composition API with the widget.</p>
+            </a>
+
+            <a href="/angular.html" class="menu-card angular">
+                <h2>🅰️ Angular Integration</h2>
+                <p>Integration example using an Angular Component and `ViewChild`.</p>
+            </a>
+        </div>
+
+        <h2>Vanilla Test Environment</h2>
+        <div style="background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+            <div id="vanilla-changelog"></div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { GithubChangelog } from '../dist/index.js';
+
+        // Initialize the vanilla test playground
+        const widget = new GithubChangelog({
+            owner: 'microsoft',
+            repo: 'vscode',
+            template: 'list',
+            theme: 'light',
+            maxReleases: 3,
+            containerId: 'vanilla-changelog'
+        });
+
+        widget.init();
+    </script>
+</body>
+
+</html>

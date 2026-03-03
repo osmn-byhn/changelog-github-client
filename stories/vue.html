@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue 3 Integration Demo - Github Changelog</title>
+
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+    <style>
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            margin: 0;
+            padding: 2rem;
+            background: #1a1a1a;
+            color: #fff;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        a {
+            color: #4ade80;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <a href="/index.html" style="text-decoration: none;">← Back to Examples</a>
+        <h1>Vue 3 Integration</h1>
+    </div>
+
+    <div id="app">
+        <p>This is a native Vue 3 Component (`<vue-changelog-loader>`) managing the vanilla JS widget.</p>
+        <div style="margin-top: 2rem;">
+            <vue-changelog-loader owner="vuejs" repo="core" template="timeline" theme="dark"
+                max-releases="5"></vue-changelog-loader>
+        </div>
+    </div>
+
+    <script type="module">
+        import { GithubChangelog } from '../dist/index.js';
+        const { createApp, ref, onMounted, watch } = Vue;
+
+        const VueChangelogLoader = {
+            props: ['owner', 'repo', 'template', 'theme', 'maxReleases'],
+            template: `<div ref="container"></div>`,
+            setup(props) {
+                const container = ref(null);
+
+                const renderWidget = () => {
+                    if (!container.value) return;
+                    if (!container.value.id) {
+                        container.value.id = 'vue-changelog-widget';
+                    }
+
+                    const widget = new GithubChangelog({
+                        owner: props.owner || 'vuejs',
+                        repo: props.repo || 'core',
+                        template: props.template || 'timeline',
+                        theme: props.theme || 'dark',
+                        maxReleases: parseInt(props.maxReleases) || 5,
+                        containerId: container.value.id
+                    });
+
+                    widget.init();
+                };
+
+                onMounted(() => renderWidget());
+                watch(() => props, () => renderWidget(), { deep: true });
+
+                return { container };
+            }
+        };
+
+        const app = createApp({});
+        app.component('vue-changelog-loader', VueChangelogLoader);
+        app.mount('#app');
+    </script>
+</body>
+
+</html>
