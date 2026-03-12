@@ -19,11 +19,6 @@
     "isolatedModules": true,
     "noEmit": true,
     "baseUrl": ".",
-    "paths": {
-      "@osmn-byhn/changelog-github-core": [
-        "node_modules/@osmn-byhn/changelog-github-core/src/index.ts"
-      ]
-    },
     "declaration": true,
     "outDir": "dist",
     "jsx": "react-jsx"

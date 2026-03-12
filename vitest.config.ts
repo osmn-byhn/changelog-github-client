@@ -13,9 +13,4 @@ export default defineConfig({
       reporter: ['text', 'json', 'html'],
     },
   },
-  resolve: {
-    alias: {
-      '@osmn-byhn/changelog-github-core': path.resolve(dirname, './node_modules/@osmn-byhn/changelog-github-core/src/index.ts'),
-    },
-  },
 });
